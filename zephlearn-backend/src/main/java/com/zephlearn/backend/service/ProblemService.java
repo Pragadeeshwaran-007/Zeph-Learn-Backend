@@ -20,10 +20,15 @@ public class ProblemService {
         this.problemRepository = problemRepository;
     }
 
+    @Transactional
     public List<ProblemDTO> getAll() {
         return problemRepository.findAll().stream()
                 .map(this::mapToDTOWithoutHiddenTestCases)
                 .collect(Collectors.toList());
+    }
+
+    public long countAll() {
+        return problemRepository.count();
     }
 
     public ProblemDTO getById(Long id) {

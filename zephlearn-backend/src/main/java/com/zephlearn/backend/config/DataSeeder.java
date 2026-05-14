@@ -46,7 +46,7 @@ public class DataSeeder implements CommandLineRunner {
                     .build());
         }
 
-        if (problemService.getAll().isEmpty()) {
+        if (problemService.countAll() == 0) {
             seedProblems();
         }
     }
