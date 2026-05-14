@@ -1,56 +1,44 @@
 package com.zephlearn.backend.service;
 
 import com.zephlearn.backend.dto.RunResponse;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
 @Service
 public class Judge0Service {
 
-    @Value("${judge0.api.url}")
-    private String apiUrl;
-
-    @Value("${judge0.api.key}")
-    private String apiKey;
+    private static final String API_URL = "https://ce.judge0.com/submissions?base64_encoded=false&wait=true";
 
     private final RestTemplate restTemplate = new RestTemplate();
 
     public RunResponse execute(String code, String languageId, String stdin) {
         try {
-            String encodedCode = Base64.getEncoder().encodeToString(code.getBytes());
-            String encodedStdin = stdin != null ? Base64.getEncoder().encodeToString(stdin.getBytes()) : null;
-
             Map<String, Object> requestBody = new HashMap<>();
-            requestBody.put("source_code", encodedCode);
+            requestBody.put("source_code", code);
             requestBody.put("language_id", Integer.parseInt(languageId));
-            if (encodedStdin != null) {
-                requestBody.put("stdin", encodedStdin);
+            if (stdin != null && !stdin.isEmpty()) {
+                requestBody.put("stdin", stdin);
             }
 
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
-            headers.set("X-RapidAPI-Host", apiUrl.replace("https://", ""));
-            headers.set("X-RapidAPI-Key", apiKey);
 
             HttpEntity<Map<String, Object>> entity = new HttpEntity<>(requestBody, headers);
 
-            ResponseEntity<Map> response = restTemplate.postForEntity(apiUrl + "/submissions?base64_encoded=true&wait=true", entity, Map.class);
+            ResponseEntity<Map> response = restTemplate.postForEntity(API_URL, entity, Map.class);
             Map<String, Object> body = response.getBody();
 
             if (body == null) throw new RuntimeException("Empty response from Judge0");
 
             RunResponse runResponse = new RunResponse();
-            
-            // Decode base64 outputs
-            String stdout = body.get("stdout") != null ? new String(Base64.getDecoder().decode((String) body.get("stdout"))) : null;
-            String stderr = body.get("stderr") != null ? new String(Base64.getDecoder().decode((String) body.get("stderr"))) : null;
-            String compileOutput = body.get("compile_output") != null ? new String(Base64.getDecoder().decode((String) body.get("compile_output"))) : null;
+
+            String stdout = body.get("stdout") != null ? (String) body.get("stdout") : null;
+            String stderr = body.get("stderr") != null ? (String) body.get("stderr") : null;
+            String compileOutput = body.get("compile_output") != null ? (String) body.get("compile_output") : null;
 
             runResponse.setStdout(stdout);
             runResponse.setStderr(stderr != null ? stderr : compileOutput);
