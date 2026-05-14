@@ -6,6 +6,7 @@ import com.zephlearn.backend.model.Problem;
 import com.zephlearn.backend.model.TestCase;
 import com.zephlearn.backend.repository.ProblemRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -88,6 +89,7 @@ public class ProblemService {
         problem.setTags(dto.getTags());
     }
 
+    @Transactional
     private ProblemDTO mapToDTO(Problem problem) {
         ProblemDTO dto = new ProblemDTO();
         dto.setId(problem.getId());
@@ -115,6 +117,7 @@ public class ProblemService {
         return dto;
     }
 
+    @Transactional
     private ProblemDTO mapToDTOWithoutHiddenTestCases(Problem problem) {
         ProblemDTO dto = mapToDTO(problem);
         List<TestCaseDTO> visibleOnly = dto.getTestCases().stream()

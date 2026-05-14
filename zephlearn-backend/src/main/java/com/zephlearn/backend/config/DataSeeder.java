@@ -8,6 +8,7 @@ import com.zephlearn.backend.service.ProblemService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 
@@ -25,6 +26,7 @@ public class DataSeeder implements CommandLineRunner {
     }
 
     @Override
+    @Transactional
     public void run(String... args) throws Exception {
         if (userRepository.findByEmail("admin@zephlearn.com").isEmpty()) {
             userRepository.save(User.builder()
