@@ -3,6 +3,7 @@ package com.zephlearn.backend.controller;
 import com.zephlearn.backend.dto.AuthRequest;
 import com.zephlearn.backend.dto.AuthResponse;
 import com.zephlearn.backend.dto.GoogleAuthRequest;
+import com.zephlearn.backend.dto.LoginRequest;
 import com.zephlearn.backend.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +25,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest request) {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         return ResponseEntity.ok(authService.login(request));
     }
 

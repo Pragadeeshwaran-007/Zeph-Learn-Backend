@@ -3,6 +3,7 @@ package com.zephlearn.backend.service;
 import com.zephlearn.backend.dto.AuthRequest;
 import com.zephlearn.backend.dto.AuthResponse;
 import com.zephlearn.backend.dto.GoogleAuthRequest;
+import com.zephlearn.backend.dto.LoginRequest;
 import com.zephlearn.backend.model.AuthProvider;
 import com.zephlearn.backend.model.User;
 import com.zephlearn.backend.repository.UserRepository;
@@ -55,7 +56,7 @@ public class AuthService {
     }
 
     @Transactional
-    public AuthResponse login(AuthRequest request) {
+    public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Invalid email or password"));
 
