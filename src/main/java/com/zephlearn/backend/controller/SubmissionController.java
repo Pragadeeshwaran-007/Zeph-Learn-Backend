@@ -41,6 +41,12 @@ public class SubmissionController {
     public ResponseEntity<List<SubmissionDTO>> getByUser(@PathVariable Long userId) {
         return ResponseEntity.ok(submissionService.getByUser(userId));
     }
+
+    @GetMapping("/problem/{problemId}")
+    public ResponseEntity<List<SubmissionDTO>> getByProblem(@PathVariable Long problemId) {
+        Long userId = getCurrentUserId();
+        return ResponseEntity.ok(submissionService.getByProblem(userId, problemId));
+    }
     
     private Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

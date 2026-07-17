@@ -159,6 +159,21 @@ public class SubmissionService {
                 .collect(Collectors.toList());
     }
 
+    public List<SubmissionDTO> getByProblem(Long userId, Long problemId) {
+        List<Submission> submissions = submissionRepository.findByUserIdAndProblemIdOrderBySubmittedAtDesc(userId, problemId);
+        if (submissions.isEmpty()) {
+            return List.of();
+        }
+
+        Problem problem = problemRepository.findById(problemId).orElse(null);
+        String problemTitle = problem != null ? problem.getTitle() : "Unknown";
+        Map<Long, String> problemTitles = Map.of(problemId, problemTitle);
+
+        return submissions.stream()
+                .map(submission -> toDto(submission, problemTitles))
+                .collect(Collectors.toList());
+    }
+
     private SubmissionDTO toDto(Submission submission, Map<Long, String> problemTitles) {
         Long problemId = submission.getProblemId();
         String problemTitle = problemId != null
