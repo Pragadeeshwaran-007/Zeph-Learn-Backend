@@ -54,6 +54,12 @@ public class NotificationService {
                 .collect(Collectors.toList());
     }
 
+    public List<NotificationDTO> getAllNotifications() {
+        return notificationRepository.findAllByOrderByCreatedAtDesc().stream()
+                .map(n -> toDto(n, false, null))
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public NotificationDTO markAsRead(Long userId, Long notificationId) {
         Notification notification = notificationRepository.findById(notificationId)
