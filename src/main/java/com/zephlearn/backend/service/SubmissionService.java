@@ -193,4 +193,8 @@ public class SubmissionService {
                 .submittedAt(submission.getSubmittedAt())
                 .build();
     }
+
+    public long count() {
+        return submissionRepository.count();
+    }
 }

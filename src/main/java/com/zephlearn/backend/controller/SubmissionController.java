@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.zephlearn.backend.model.User;
 import com.zephlearn.backend.repository.UserRepository;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import java.util.List;
 
 @RestController
@@ -48,6 +49,12 @@ public class SubmissionController {
         return ResponseEntity.ok(submissionService.getByProblem(userId, problemId));
     }
     
+    @GetMapping("/count")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Long> getCount() {
+        return ResponseEntity.ok(submissionService.count());
+    }
+
     private Long getCurrentUserId() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();

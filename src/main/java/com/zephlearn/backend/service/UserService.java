@@ -64,6 +64,22 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    @Transactional(readOnly = true)
+    public List<Map<String, Object>> getAllUsersWithSolved() {
+        return userRepository.findAll().stream().map(user -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("id", user.getId());
+            map.put("name", user.getName());
+            map.put("email", user.getEmail());
+            map.put("role", user.getRole());
+            map.put("streak", user.getStreak());
+            map.put("createdAt", user.getCreatedAt());
+            map.put("solvedProblemIds", getSolvedProblems(user.getId()));
+            return map;
+        }).collect(Collectors.toList());
+    }
+
+
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }

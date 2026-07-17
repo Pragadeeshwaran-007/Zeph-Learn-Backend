@@ -26,8 +26,8 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public ResponseEntity<List<Map<String, Object>>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsersWithSolved());
     }
 
     @DeleteMapping("/{id}")
